@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.2/css/bootstrap.min.css">
+    <title>📺 Loader</title>
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg bg-primary pt-4 pb-2 mb-4">
+      <h1 class="container display-1 text-white">📺 Loader</h1>
+    </nav>
+    <div class="container">
+      <p class="lead"></p>
+      <form action="/submit" >
+        <div class="form-row align-items-center">
+          <div class="col-sm-11 my-1">
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">URL</div>
+              </div>
+              <input type="text" class="form-control" name="url" id="url" placeholder="">
+            </div>
+          </div>
+          <div class="col-auto my-1">
+            <button type="submit" class="btn btn-primary">Submit</button>
+          </div>
+        </div>
+      </form>
+      <div class="row">
+      <div class="col-sm-4">
+        <div class="list-group">
+        <% @threads.each_with_index do |thread,idx| %>
+            <a href="/select/<%= idx %>" 
+              class="list-group-item list-group-item-action <% if idx.to_s == @active_idx.to_s %>active<%end%>">
+              <span class="badge badge-secondary badge-pill"><%= idx %></span>
+              <% if thread.alive? %>
+              <span class="badge badge-success badge-pill ">running</span>
+              <% else %>
+              <span class="badge badge-danger badge-pill ">stoped</span>
+              <% end %>
+              
+            </a>  
+            
+        <% end %>
+        </div>
+      </div>
+      <div class="col-sm-8 my-1" >
+        <% if @threads[@active_idx] %>
+          <div class="card">
+            <div class="card-header"><%= @threads[@active_idx]["name"] %>
+            <a href="/delete/<%= @active_idx%>" class="btn btn-danger">X</a></div>
+            <div class="card-body">
+            <pre><code> <%= @threads[@active_idx]["logs"] %> </code></pre>
+          </div>
+        </div>
+        
+        <% end %>
+      </div>
+    </div>
+    </div>
+    
+    <a href="https://github.com/yremmet/youtube-dl-server">
+      <img style="position: absolute; top: 0; right: 0; border: 0; width: 149px; height: 149px;" src="//aral.github.com/fork-me-on-github-retina-ribbons/right-red@2x.png" alt="Fork me on GitHub">
+    </a>
+    
+
+    <nav class="navbar bg-primary fixed-bottom text-white">
+      <span class="navbar-brand">👨‍🔬</span>
+      <span>Made with ❤️ by&nbsp;<a class="text-white" href="https://github.com/yremmet">Yannic Remmet</a></span>
+    </nav>
+  </body>
+</html>

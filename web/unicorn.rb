@@ -1,0 +1,1 @@
+worker_processes (ENV["WEB_CONCURRENCY"] || 1).to_i
