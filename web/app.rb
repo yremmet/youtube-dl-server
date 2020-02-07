@@ -7,9 +7,11 @@ require "awesome_print" if ENV["RACK_ENV"] == "development"
 $threads = []
 $dl=`which youtube-dl`.strip
 
-use Rack::Auth::Basic, "Protected Area" do |username, password|
-    username == ENV["HTTP_USERNAME"] && password == ENV["HTTP_PASSWORD"]
-end
+if ENV["AUTH"] == "basic" then 
+    use Rack::Auth::Basic, "Protected Area" do |username, password|
+        username == ENV["HTTP_USERNAME"] && password == ENV["HTTP_PASSWORD"]
+    end
+end 
 
 
 get "/" do
@@ -33,13 +35,19 @@ end
 
 get '/submit' do
     url=params[:url]
+    sound=params[:sound] || "false"
     name=`#{$dl} --get-filename #{url}`
 
     $threads << Thread.new do # trivial example work thread
         Thread.current["url"]=url
         Thread.current["name"]=name
-        puts "#{$dl} -o #{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s.%(ext)s #{url}"
-        x=`#{$dl} -o "#{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s.%(ext)s" #{url}`
+        unless sound == "false" then
+            puts "#{$dl} -o #{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s.%(ext)s #{url}"
+            x=`#{$dl} -o "#{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s_%(url)s.%(ext)s" #{url}`
+        else
+            puts "#{$dl} -f 'bestaudio[ext=m4a]' -o #{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s.%(ext)s #{url} "
+            x=`#{$dl} -f 'bestaudio[ext=m4a]' -o "#{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s_%(url)s.%(ext)s" #{url}`
+        end
         Thread.current["logs"] = x
     end
     
