@@ -41,13 +41,17 @@ get '/submit' do
     $threads << Thread.new do # trivial example work thread
         Thread.current["url"]=url
         Thread.current["name"]=name
-        unless sound == "false" then
-            puts "#{$dl} -o #{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s.%(ext)s #{url}"
-            x=`#{$dl} -o "#{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s_%(url)s.%(ext)s" #{url}`
-        else
-            puts "#{$dl} -f 'bestaudio[ext=m4a]' -o #{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s.%(ext)s #{url} "
-            x=`#{$dl} -f 'bestaudio[ext=m4a]' -o "#{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s_%(url)s.%(ext)s" #{url}`
+        if url.include? "tiktok" then
+            command="#{$dl} -o \"#{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s.mp4\" #{url}"
+        else     
+            if sound == "false" then
+                command="#{$dl} -o \"#{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s.%(ext)s\" #{url}"
+            else
+                command="#{$dl} -f 'bestaudio[ext=m4a]' -o \"#{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s_%(url)s.%(ext)s\" #{url}"
+            end
         end
+        puts "#{command}"
+        x=`#{command}`
         Thread.current["logs"] = x
     end
     

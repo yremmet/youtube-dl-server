@@ -8,6 +8,7 @@ ENV HTTP_USERNAME user
 ENV RACK_ENV production
 ENV PORT 5000
 ENV WEB_CONCURRENCY 1
+EXPOSE 5000
 
 RUN     apt-get update && \
         apt-get install -y --no-install-recommends ffmpeg && \
