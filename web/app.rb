@@ -45,9 +45,9 @@ get '/submit' do
             command="#{$dl} -o \"#{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s.mp4\" #{url}"
         else     
             if sound == "false" then
-                command="#{$dl} -o \"#{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s.%(ext)s\" #{url}"
+                command="#{$dl} -f 'bestvideo[ext=mp4]' -o \"#{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s.%(ext)s\" #{url}"
             else
-                command="#{$dl} -f 'bestaudio[ext=m4a]' -o \"#{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s_%(url)s.%(ext)s\" #{url}"
+                command="#{$dl} --extract-audio --audio-format aac -o \"#{ENV["OUTPUT_DIR"]}/%(title)s-%(id)s.%(ext)s\" #{url}"
             end
         end
         puts "#{command}"
